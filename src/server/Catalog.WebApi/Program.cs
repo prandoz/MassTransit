@@ -1,3 +1,5 @@
+using System.Reflection;
+using Catalog.Common.Interfaces;
 using Catalog.Common.Services;
 using MassTransit;
 
@@ -28,6 +30,12 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddMediator(cfg =>
+{
+	cfg.AddConsumers(Assembly.GetAssembly(typeof(Catalog.Common.Consumer.UpdatePriceConsumer)));
+	cfg.AddRequestClient<IUpdatePrice>();
+});
 
 // OPTIONAL, but can be used to configure the bus options
 //builder.Services.AddOptions<MassTransitHostOptions>()
